@@ -1,0 +1,754 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 활용 역량 강화 중급 과정 — 프로젝트 킥오프</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pri:#f8fafc;--pri2:#f1f5f9;--accent:#3b82f6;--accent2:#6366f1;
+  --accent3:#8b5cf6;--highlight:#f59e0b;--green:#10b981;--rose:#f43f5e;
+  --light:#f8fafc;--white:#ffffff;--gray:#64748b;--dark:#0f172a;
+  --text:#1e293b;--text2:#334155;--text3:#475569;--text-muted:#94a3b8;
+  --grad1:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  --grad2:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);
+  --grad3:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);
+  --grad4:linear-gradient(135deg,#43e97b 0%,#38f9d7 100%);
+  --grad5:linear-gradient(135deg,#fa709a 0%,#fee140 100%);
+  --glass:rgba(255,255,255,0.7);
+  --shadow:0 25px 50px -12px rgba(0,0,0,0.08);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',system-ui,sans-serif;background:#f8fafc;color:#1e293b;overflow-x:hidden}
+
+/* ─── Navigation ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(255,255,255,0.85);border-bottom:1px solid rgba(0,0,0,0.06);transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.nav-logo{font-weight:900;font-size:1.1rem;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:.5rem}
+.nav-links a{color:#64748b;text-decoration:none;font-size:.8rem;font-weight:500;padding:.4rem .8rem;border-radius:8px;transition:all .3s}
+.nav-links a:hover,.nav-links a.active{color:#4338ca;background:rgba(99,102,241,0.1)}
+.nav-progress{position:absolute;bottom:0;left:0;height:2px;background:var(--grad1);transition:width .3s}
+
+/* ─── Sections ─── */
+.section{min-height:100vh;padding:6rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.section .content{max-width:1200px;width:100%;position:relative;z-index:2}
+
+/* ─── Animated BG ─── */
+.bg-orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.12;animation:orbFloat 20s ease-in-out infinite}
+.orb:nth-child(1){width:600px;height:600px;background:#818cf8;top:-20%;left:-10%;animation-delay:0s}
+.orb:nth-child(2){width:500px;height:500px;background:#60a5fa;bottom:-20%;right:-10%;animation-delay:-7s}
+.orb:nth-child(3){width:400px;height:400px;background:#c084fc;top:50%;left:50%;animation-delay:-14s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-50px) scale(1.1)}66%{transform:translate(-20px,40px) scale(0.9)}}
+
+/* ─── Grid BG ─── */
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+
+/* ─── Reveal Animation ─── */
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.16,1,.3,1)}.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:all .8s cubic-bezier(.16,1,.3,1)}.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:all .8s cubic-bezier(.16,1,.3,1)}.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.8);transition:all .8s cubic-bezier(.16,1,.3,1)}.reveal-scale.visible{opacity:1;transform:scale(1)}
+.stagger>*{opacity:0;transform:translateY(30px);transition:all .6s cubic-bezier(.16,1,.3,1)}
+.stagger.visible>*{opacity:1;transform:translateY(0)}
+.stagger.visible>*:nth-child(1){transition-delay:.05s}
+.stagger.visible>*:nth-child(2){transition-delay:.1s}
+.stagger.visible>*:nth-child(3){transition-delay:.15s}
+.stagger.visible>*:nth-child(4){transition-delay:.2s}
+.stagger.visible>*:nth-child(5){transition-delay:.25s}
+.stagger.visible>*:nth-child(6){transition-delay:.3s}
+.stagger.visible>*:nth-child(7){transition-delay:.35s}
+.stagger.visible>*:nth-child(8){transition-delay:.4s}
+
+/* ─── Cover ─── */
+#cover{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;background:linear-gradient(180deg,#eef2ff 0%,#f8fafc 100%)}
+.cover-tag{display:inline-block;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);padding:.5rem 1.5rem;border-radius:100px;font-size:.85rem;font-weight:500;color:#4f46e5;letter-spacing:.08em;margin-bottom:2rem;animation:fadeInDown .8s .2s both}
+.cover-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;line-height:1.2;margin-bottom:1.5rem;color:#1e293b;animation:fadeInUp 1s .4s both}
+.cover-title .gradient{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cover-sub{font-size:1.2rem;color:#64748b;font-weight:300;margin-bottom:3rem;animation:fadeInUp 1s .6s both}
+.cover-meta{color:#64748b;font-size:.95rem;line-height:2;animation:fadeInUp 1s .8s both}
+.cover-meta strong{color:#1e293b}
+.cover-scroll{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);animation:bounce 2s infinite}
+.cover-scroll span{display:block;width:24px;height:38px;border:2px solid #94a3b8;border-radius:12px;position:relative}
+.cover-scroll span::after{content:'';width:4px;height:8px;background:#6366f1;border-radius:2px;position:absolute;top:6px;left:50%;transform:translateX(-50%);animation:scrollDot 2s infinite}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+@keyframes scrollDot{0%{opacity:1;top:6px}100%{opacity:0;top:20px}}
+
+/* ─── Particle canvas ─── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+/* ─── Section Title ─── */
+.sec-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#6366f1;margin-bottom:.5rem}
+.sec-title{font-size:2rem;font-weight:900;color:#1e293b;margin-bottom:.5rem;line-height:1.3}
+.sec-desc{font-size:1rem;color:#64748b;margin-bottom:2.5rem;line-height:1.7;max-width:700px}
+
+/* ─── Glass Card ─── */
+.glass{background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.06);border-radius:20px;padding:2rem;transition:all .4s;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.glass:hover{border-color:rgba(99,102,241,0.2);box-shadow:0 8px 40px rgba(99,102,241,0.08)}
+
+/* ─── Info Grid ─── */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.info-item{display:flex;gap:1rem;align-items:flex-start}
+.info-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;color:#fff}
+.info-text h4{font-size:.92rem;font-weight:700;color:#1e293b;margin-bottom:.2rem}
+.info-text p{font-size:.85rem;color:#64748b;line-height:1.5}
+
+/* ─── Phase Cards ─── */
+.phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.5rem}
+.phase-card{border-radius:20px;padding:2.5rem;position:relative;overflow:hidden;transition:transform .4s;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.phase-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+.phase-card::before{content:'';position:absolute;inset:0;opacity:.1;border-radius:20px}
+.phase-card.p1{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(99,102,241,0.05));border:1px solid rgba(59,130,246,0.2)}
+.phase-card.p2{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(244,63,94,0.05));border:1px solid rgba(245,158,11,0.2)}
+.phase-tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:.3rem .8rem;border-radius:100px;display:inline-block;margin-bottom:1rem}
+.phase-card.p1 .phase-tag{background:rgba(59,130,246,0.12);color:#2563eb}
+.phase-card.p2 .phase-tag{background:rgba(245,158,11,0.12);color:#d97706}
+.phase-card h3{font-size:1.3rem;font-weight:900;color:#1e293b;margin-bottom:.3rem}
+.phase-card .period{font-size:.9rem;color:#64748b;margin-bottom:1rem}
+.phase-card ul{list-style:none;padding:0}
+.phase-card ul li{font-size:.9rem;color:#475569;padding:.4rem 0;padding-left:1.5rem;position:relative}
+.phase-card ul li::before{content:'';position:absolute;left:0;top:.65rem;width:8px;height:8px;border-radius:50%}
+.phase-card.p1 ul li::before{background:#3b82f6}
+.phase-card.p2 ul li::before{background:#f59e0b}
+.phase-note{font-size:.78rem;color:#94a3b8;font-style:italic;margin-top:.8rem;padding-top:.6rem;border-top:1px dashed rgba(0,0,0,0.08)}
+
+/* ─── Curriculum Table ─── */
+.curr-wrap{overflow-x:auto;border-radius:16px;border:1px solid rgba(0,0,0,0.06);margin-top:1.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.04);background:#fff}
+.curr-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.curr-table thead th{background:rgba(99,102,241,0.08);color:#4f46e5;padding:.9rem 1rem;text-align:left;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid rgba(0,0,0,0.06)}
+.curr-table thead th:first-child{border-radius:16px 0 0 0}
+.curr-table thead th:last-child{border-radius:0 16px 0 0}
+.curr-table td{padding:.75rem 1rem;border-bottom:1px solid rgba(0,0,0,0.04);color:#475569}
+.curr-table tr:hover td{background:rgba(99,102,241,0.03)}
+.curr-table .module-row td{background:rgba(99,102,241,0.06);color:#4f46e5;font-weight:700;font-size:.85rem;border-bottom:1px solid rgba(99,102,241,0.12)}
+.curr-table td:first-child{text-align:center;font-weight:700;color:#6366f1}
+.curr-table td:nth-child(3){text-align:center;color:#64748b}
+.curr-table td:last-child{text-align:center}
+.instructor-badge{display:inline-block;width:28px;height:28px;border-radius:50%;font-size:.75rem;font-weight:700;line-height:28px;text-align:center;color:#fff}
+.instructor-badge.a{background:linear-gradient(135deg,#3b82f6,#6366f1)}
+.instructor-badge.b{background:linear-gradient(135deg,#10b981,#14b8a6)}
+.instructor-badge.c{background:linear-gradient(135deg,#f59e0b,#f97316)}
+.instructor-badge.d{background:linear-gradient(135deg,#f43f5e,#e879f9)}
+
+/* ─── Timeline ─── */
+.timeline{position:relative;margin:2rem 0 1rem 0}
+.timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#6366f1,#3b82f6,#10b981,#f59e0b)}
+.tl-item{position:relative;padding-left:60px;margin-bottom:2rem}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:15px;top:4px;width:20px;height:20px;border-radius:50%;border:3px solid;display:flex;align-items:center;justify-content:center;background:#fff}
+.tl-dot::after{content:'';width:8px;height:8px;border-radius:50%}
+.tl-item:nth-child(1) .tl-dot{border-color:#6366f1}.tl-item:nth-child(1) .tl-dot::after{background:#6366f1}
+.tl-item:nth-child(2) .tl-dot{border-color:#3b82f6}.tl-item:nth-child(2) .tl-dot::after{background:#3b82f6}
+.tl-item:nth-child(3) .tl-dot{border-color:#10b981}.tl-item:nth-child(3) .tl-dot::after{background:#10b981}
+.tl-item:nth-child(4) .tl-dot{border-color:#f59e0b}.tl-item:nth-child(4) .tl-dot::after{background:#f59e0b}
+.tl-item:nth-child(5) .tl-dot{border-color:#f43f5e}.tl-item:nth-child(5) .tl-dot::after{background:#f43f5e}
+.tl-date{font-size:.78rem;font-weight:700;color:#6366f1;margin-bottom:.2rem}
+.tl-title{font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:.3rem}
+.tl-desc{font-size:.85rem;color:#64748b;line-height:1.5}
+.tl-output{display:inline-block;margin-top:.4rem;font-size:.75rem;background:rgba(99,102,241,0.08);color:#4f46e5;padding:.2rem .6rem;border-radius:6px}
+.tl-phase-label{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.2rem .6rem;border-radius:6px;margin-bottom:.3rem}
+.tl-phase-label.prep{background:rgba(99,102,241,0.08);color:#6366f1}
+.tl-phase-label.dev{background:rgba(59,130,246,0.08);color:#2563eb}
+
+/* ─── Rotation Ring ─── */
+.rotation-ring{display:flex;justify-content:center;gap:0;margin:2rem 0;position:relative}
+.rot-person{text-align:center;padding:1rem 2rem;position:relative}
+.rot-person::after{content:'→';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:1.5rem;color:#94a3b8;font-weight:700}
+.rot-person:last-child::after{content:'↩';color:#6366f1}
+.rot-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;color:#fff;margin:0 auto .6rem;position:relative;box-shadow:0 4px 15px rgba(0,0,0,0.12)}
+.rot-avatar::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid transparent;animation:rotBorder 3s linear infinite}
+@keyframes rotBorder{0%{border-color:rgba(99,102,241,0.5);transform:rotate(0deg)}50%{border-color:rgba(59,130,246,0.5)}100%{border-color:rgba(99,102,241,0.5);transform:rotate(360deg)}}
+.rot-name{font-size:.9rem;font-weight:700;color:#1e293b}
+.rot-role{font-size:.75rem;color:#64748b;margin-top:.2rem}
+
+/* ─── Agenda ─── */
+.agenda-list{display:flex;flex-direction:column;gap:.8rem}
+.agenda-row{display:flex;gap:1rem;align-items:center;padding:1rem 1.2rem;border-radius:14px;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.05);transition:all .3s}
+.agenda-row:hover{border-color:rgba(99,102,241,0.2);background:rgba(99,102,241,0.04);box-shadow:0 4px 15px rgba(99,102,241,0.06)}
+.agenda-time{font-size:.75rem;font-weight:700;color:#4f46e5;background:rgba(99,102,241,0.08);padding:.3rem .6rem;border-radius:8px;white-space:nowrap}
+.agenda-info h4{font-size:.92rem;font-weight:700;color:#1e293b;margin-bottom:.1rem}
+.agenda-info p{font-size:.82rem;color:#64748b}
+
+/* ─── Part Cards ─── */
+.part-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.part-card{border-radius:20px;padding:2rem;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.06);background:rgba(255,255,255,0.8);transition:all .4s;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.part-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.2);box-shadow:0 12px 40px rgba(99,102,241,0.1)}
+.part-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.part-avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.part-name{font-size:1rem;font-weight:700;color:#1e293b}
+.part-sub{font-size:.78rem;color:#64748b}
+.part-card ul{list-style:none;padding:0}
+.part-card ul li{font-size:.85rem;color:#475569;padding:.3rem 0;padding-left:1.2rem;position:relative}
+.part-card ul li::before{content:'▸';position:absolute;left:0;color:#6366f1}
+
+/* ─── Gantt Chart ─── */
+.gantt{width:100%;border-collapse:separate;border-spacing:0;font-size:.78rem;margin-top:1rem}
+.gantt thead th{padding:.6rem .5rem;color:#64748b;font-weight:600;text-align:center;border-bottom:1px solid rgba(0,0,0,0.06);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.gantt td{padding:.5rem .3rem;text-align:center;border-bottom:1px solid rgba(0,0,0,0.04)}
+.gantt td:first-child{text-align:left;font-weight:700;color:#4f46e5;padding-left:1rem}
+.gantt .bar{height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff;white-space:nowrap}
+.bar.blue{background:linear-gradient(90deg,#3b82f6,#6366f1)}
+.bar.amber{background:linear-gradient(90deg,#f59e0b,#f97316)}
+.bar.green{background:linear-gradient(90deg,#10b981,#14b8a6)}
+.bar.purple{background:linear-gradient(90deg,#8b5cf6,#6366f1)}
+.bar.dim{background:rgba(100,116,139,0.12);color:#64748b}
+.bar.light-blue{background:rgba(99,102,241,0.12);color:#4f46e5}
+
+/* ─── Discuss ─── */
+.discuss-grid{display:flex;flex-direction:column;gap:.8rem}
+.discuss-row{display:flex;gap:1rem;align-items:flex-start;padding:1.2rem;border-radius:14px;background:rgba(255,255,255,0.7);border:1px solid rgba(0,0,0,0.05);transition:all .3s;box-shadow:0 2px 10px rgba(0,0,0,0.02)}
+.discuss-row:hover{border-color:rgba(99,102,241,0.2);box-shadow:0 4px 20px rgba(99,102,241,0.06)}
+.discuss-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;color:#fff;flex-shrink:0}
+.discuss-body h4{font-size:.95rem;font-weight:700;color:#1e293b;margin-bottom:.2rem}
+.discuss-body p{font-size:.85rem;color:#64748b;line-height:1.5}
+
+/* ─── Callout ─── */
+.callout-box{border-radius:16px;padding:1.5rem 2rem;border-left:4px solid;margin-top:2rem;backdrop-filter:blur(10px)}
+.callout-box.amber{background:rgba(245,158,11,0.06);border-color:#f59e0b}
+.callout-box.blue{background:rgba(59,130,246,0.06);border-color:#3b82f6}
+.callout-box.purple{background:rgba(99,102,241,0.06);border-color:#6366f1}
+.callout-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem}
+.callout-box.amber h4{color:#d97706}
+.callout-box.blue h4{color:#2563eb}
+.callout-box.purple h4{color:#4f46e5}
+.callout-box ul{list-style:none;padding:0}
+.callout-box ul li{font-size:.88rem;color:#475569;padding:.3rem 0;padding-left:1.2rem;position:relative;line-height:1.6}
+.callout-box ul li::before{content:'•';position:absolute;left:0;font-weight:700}
+.callout-box.amber ul li::before{color:#f59e0b}
+.callout-box.blue ul li::before{color:#3b82f6}
+.callout-box.purple ul li::before{color:#6366f1}
+.callout-box p{font-size:.88rem;color:#475569;line-height:1.6}
+
+/* ─── Stats ─── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin:2rem 0}
+.stat-card{text-align:center;padding:2rem 1rem;border-radius:16px;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.06);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card:nth-child(1)::before{background:var(--grad1)}
+.stat-card:nth-child(2)::before{background:var(--grad3)}
+.stat-card:nth-child(3)::before{background:var(--grad4)}
+.stat-card:nth-child(4)::before{background:var(--grad5)}
+.stat-value{font-size:2.5rem;font-weight:900;margin-bottom:.3rem}
+.stat-card:nth-child(1) .stat-value{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card:nth-child(2) .stat-value{background:var(--grad3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card:nth-child(3) .stat-value{background:var(--grad4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-card:nth-child(4) .stat-value{background:var(--grad5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.82rem;color:#64748b}
+.stat-bar{height:4px;background:rgba(0,0,0,0.06);border-radius:2px;margin-top:1rem;overflow:hidden}
+.stat-fill{height:100%;border-radius:2px;transition:width 1.5s cubic-bezier(.16,1,.3,1)}
+.stat-card:nth-child(1) .stat-fill{background:var(--grad1)}
+.stat-card:nth-child(2) .stat-fill{background:var(--grad3)}
+.stat-card:nth-child(3) .stat-fill{background:var(--grad4)}
+.stat-card:nth-child(4) .stat-fill{background:var(--grad5)}
+
+/* ─── Next Steps Table ─── */
+.next-table{width:100%;border-collapse:collapse;margin-top:1rem}
+.next-table th,.next-table td{padding:.9rem 1.2rem;text-align:left;border-bottom:1px solid rgba(0,0,0,0.05)}
+.next-table th{color:#4f46e5;font-weight:700;font-size:.85rem;width:100px;white-space:nowrap}
+.next-table td{color:#475569;font-size:.9rem}
+
+/* ─── End Section ─── */
+#end{text-align:center;background:linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%)}
+#end h2{font-size:2.5rem;font-weight:900;margin-bottom:1rem}
+#end h2 .gradient{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#end p{font-size:1.1rem;color:#64748b;line-height:2}
+
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  .phase-grid,.part-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .rotation-ring{flex-wrap:wrap}
+  .rot-person::after{display:none}
+}
+
+/* ─── Typing cursor ─── */
+.typing::after{content:'|';animation:blink 1s step-end infinite;color:#6366f1}
+@keyframes blink{50%{opacity:0}}
+
+/* ─── Counter animation ─── */
+.counter{display:inline-block}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- Nav -->
+<nav class="nav" id="mainNav">
+  <div class="nav-logo">AI 역량 강화 프로젝트</div>
+  <div class="nav-links">
+    <a href="#cover" class="active">홈</a>
+    <a href="#overview">개요</a>
+    <a href="#curriculum">커리큘럼</a>
+    <a href="#timeline">타임라인</a>
+    <a href="#rotation">운영</a>
+    <a href="#parts">파트분배</a>
+    <a href="#gantt">간트</a>
+    <a href="#discuss">논의</a>
+    <a href="#next">Next</a>
+  </div>
+  <div class="nav-progress" id="navProgress"></div>
+</nav>
+
+<!-- ═══════════ COVER ═══════════ -->
+<section class="section" id="cover">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content" style="text-align:center">
+    <div class="cover-tag">교육운영파트 · 자체 과정 개설 · 중급 수준(실무적용 중심)</div>
+    <h1 class="cover-title">
+      <span class="gradient">AI 활용 역량 강화</span><br>
+      중급 과정 개발 프로젝트
+    </h1>
+    <p class="cover-sub">교육과정 기획 · 교재 개발 · 교육계획 수립 · 교육안내 · 강의 진행</p>
+    <div class="cover-meta">
+      <strong>2026. 06. 25 (수) 14:00</strong> · 첫 미팅<br>
+      강사 4인 공동 프로젝트
+    </div>
+  </div>
+  <div class="cover-scroll"><span></span></div>
+</section>
+
+<!-- ═══════════ OVERVIEW ═══════════ -->
+<section class="section" id="overview">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">01 — PROJECT OVERVIEW</div>
+      <div class="sec-title">프로젝트 개요</div>
+      <div class="sec-desc">교육운영파트 자체 과정 개설 — 중급 수준(실무적용 중심)</div>
+    </div>
+
+    <div class="info-grid stagger" style="margin-bottom:2.5rem">
+      <div class="glass info-item">
+        <div class="info-icon" style="background:var(--grad1)">📋</div>
+        <div class="info-text"><h4>과정 유형</h4><p>자체 과정 개설 — 중급 수준(실무적용 중심)</p></div>
+      </div>
+      <div class="glass info-item">
+        <div class="info-icon" style="background:var(--grad3)">👥</div>
+        <div class="info-text"><h4>참여 인원</h4><p>강사(담당자) 4명 — 전 과정 담당</p></div>
+      </div>
+      <div class="glass info-item">
+        <div class="info-icon" style="background:var(--grad4)">🎯</div>
+        <div class="info-text"><h4>담당자(강사) 역할</h4><p>교육과정 기획 · 교재 개발 · 교육계획 수립 · 교육안내 · 강의 진행</p></div>
+      </div>
+      <div class="glass info-item">
+        <div class="info-icon" style="background:var(--grad5)">📚</div>
+        <div class="info-text"><h4>교재 수준</h4><p>중급 (AI 기초 X) — 실기·실습 70% 이상</p></div>
+      </div>
+    </div>
+
+    <div class="phase-grid reveal">
+      <div class="phase-card p1">
+        <div class="phase-tag">Phase 1 — 과정개발 및 기획</div>
+        <h3>과정개발 및 기획</h3>
+        <div class="period">8월 <span style="font-size:.82rem;color:#94a3b8">(사전 기획 6~7월)</span></div>
+        <ul>
+          <li>사전 기획: 킥오프(6/25) · 커리큘럼 설계 · 파트 분배</li>
+          <li>교재 개발 (파트별 분담 집필)</li>
+          <li>실습 예제 · 실습 환경 구축</li>
+          <li>교육계획 수립 · 교육안내 준비</li>
+        </ul>
+      </div>
+      <div class="phase-card p2">
+        <div class="phase-tag">Phase 2 — 차수별 운영</div>
+        <h3>차수별 교육 운영</h3>
+        <div class="period">9월 ~ 12월</div>
+        <ul>
+          <li>교육안내 & 수강생 모집</li>
+          <li>강의 진행 (강사별 로테이션)</li>
+          <li>차수별 피드백 반영 · 교재 보완</li>
+          <li>결과 보고</li>
+        </ul>
+        <div class="phase-note">※ 세부 일정은 담당자 별도 협의하여 진행</div>
+      </div>
+    </div>
+
+    <div class="stats-row reveal">
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="32">0</div>
+        <div class="stat-label">시간/차수</div>
+        <div class="stat-bar"><div class="stat-fill" data-width="80%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="8">0</div>
+        <div class="stat-label">회차/차수</div>
+        <div class="stat-bar"><div class="stat-fill" data-width="100%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="3">0</div>
+        <div class="stat-label">차수 (9~12월)</div>
+        <div class="stat-bar"><div class="stat-fill" data-width="60%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="96">0</div>
+        <div class="stat-label">총 강의시간 (H)</div>
+        <div class="stat-bar"><div class="stat-fill" data-width="100%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CURRICULUM ═══════════ -->
+<section class="section" id="curriculum">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">02 — CURRICULUM</div>
+      <div class="sec-title">커리큘럼 구성 (안)</div>
+      <div class="sec-desc">4H × 8회 = 총 32H/차수 — 실습 비중 70% 이상, 강의 시간 넓게 확보</div>
+    </div>
+
+    <div class="curr-wrap reveal">
+      <table class="curr-table">
+        <thead><tr><th>회차</th><th>주제</th><th>시간</th><th>핵심 실습 내용</th><th>강사</th></tr></thead>
+        <tbody>
+          <tr class="module-row"><td colspan="5">Module 0 — 환경 셋업 & AI 도구 입문</td></tr>
+          <tr><td>1</td><td>VS Code · Copilot · ChatGPT 시작하기</td><td>4H</td><td>VS Code 설치·설정, Copilot 활성화 & 사용법, ChatGPT/Claude 인터페이스, AI 주의사항</td><td><span class="instructor-badge a">A</span></td></tr>
+          <tr class="module-row"><td colspan="5">Module 1 — 프롬프트 엔지니어링 심화</td></tr>
+          <tr><td>2</td><td>프롬프트 설계 프레임워크</td><td>4H</td><td>STAR/CO-STAR/ROCARS 비교 ※기존 교재 활용, Before↔After 실험</td><td><span class="instructor-badge b">B</span></td></tr>
+          <tr><td>3</td><td>멀티턴 대화 & 체이닝</td><td>4H</td><td>복잡 업무 단계별 분해, 보고서 자동 생성 체이닝, 실무 시나리오</td><td><span class="instructor-badge c">C</span></td></tr>
+          <tr class="module-row"><td colspan="5">Module 2 — AI + 데이터 분석</td></tr>
+          <tr><td>4</td><td>AI 기반 Excel 데이터 분석</td><td>4H</td><td>Copilot/ChatGPT 피벗·차트 자동 생성, 대용량 정리, 수식 자동화</td><td><span class="instructor-badge d">D</span></td></tr>
+          <tr><td>5</td><td>Python + AI 데이터 파이프라인</td><td>4H</td><td>pandas + AI API 연동, 수집→정제→분석→리포트 자동화</td><td><span class="instructor-badge a">A</span></td></tr>
+          <tr class="module-row"><td colspan="5">Module 3 — AI 기반 업무 자동화</td></tr>
+          <tr><td>6</td><td>문서 자동화 (보고서/PPT)</td><td>4H</td><td>AI 문서 초안, 템플릿 기반 보고서·제안서 자동 생성</td><td><span class="instructor-badge b">B</span></td></tr>
+          <tr><td>7</td><td>워크플로우 자동화</td><td>4H</td><td>반복 업무 식별 → AI 자동화 설계 → 프로토타입 구현</td><td><span class="instructor-badge c">C</span></td></tr>
+          <tr class="module-row"><td colspan="5">Module 4 — 종합 프로젝트</td></tr>
+          <tr><td>8</td><td>미니 프로젝트 & 발표</td><td>4H</td><td>실무 과제 AI 솔루션 개발 → 결과 발표 → 피드백</td><td><span class="instructor-badge d">D</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-box amber reveal" style="margin-top:2rem">
+      <h4>💡 강의 시간 설계 원칙</h4>
+      <p>회당 4시간으로 넉넉히 확보하여 실습에 충분한 시간 배정. 강사 1인당 2회차 × 4H = 8H/차수, 3차수 운영 시 총 24H.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TIMELINE ═══════════ -->
+<section class="section" id="timeline">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">03 — TIMELINE</div>
+      <div class="sec-title">추진 일정 — 격주 미팅 로드맵</div>
+      <div class="sec-desc">6~7월 사전 기획 → 8월 과정개발 및 기획 → 9~12월 차수별 운영</div>
+    </div>
+
+    <div class="timeline stagger">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase-label prep">사전 기획</div>
+        <div class="tl-date">6/25 (수)</div>
+        <div class="tl-title">킥오프 — 전원</div>
+        <div class="tl-desc">방향 합의, 커리큘럼 후보 논의, 파트 분담 방향 결정</div>
+        <div class="tl-output">📄 회의록 · 역할 분담(안)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase-label prep">사전 기획</div>
+        <div class="tl-date">7/9 — 리드: A</div>
+        <div class="tl-title">커리큘럼 확정 & 템플릿 합의</div>
+        <div class="tl-desc">커리큘럼 최종 확정, 파트별 목차 상세화, 교재 템플릿 합의</div>
+        <div class="tl-output">📋 최종 목차 · 교재 템플릿</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase-label prep">사전 기획</div>
+        <div class="tl-date">7/23 — 리드: B</div>
+        <div class="tl-title">교재 목차 확정 & 집필 착수</div>
+        <div class="tl-desc">각자 파트 목차 확정, 실습 환경 구축, 집필 시작</div>
+        <div class="tl-output">📝 파트별 목차 확정 · 집필 착수</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase-label dev">과정개발</div>
+        <div class="tl-date">8/6 — 리드: C</div>
+        <div class="tl-title">교재 초안 크로스 리뷰</div>
+        <div class="tl-desc">교재 초안 크로스 리뷰, 실습 예제 개발, 피드백 반영</div>
+        <div class="tl-output">📊 교재 초안(60%) · 실습 예제</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase-label dev">과정개발</div>
+        <div class="tl-date">8/20 — 리드: D</div>
+        <div class="tl-title">교재 완성 & 교육계획 수립</div>
+        <div class="tl-desc">교재 최종본 완성, 교육계획서 확정, 교육안내 준비</div>
+        <div class="tl-output">✅ 교재 완성본 · 교육계획서 · 안내문</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ROTATION ═══════════ -->
+<section class="section" id="rotation">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">04 — OPERATION</div>
+      <div class="sec-title">격주 운영 체제</div>
+      <div class="sec-desc">2주 단위 점검 · 리드 강사가 격주별 돌아가며 진행</div>
+    </div>
+
+    <div class="reveal-scale">
+      <div class="rotation-ring">
+        <div class="rot-person"><div class="rot-avatar" style="background:var(--grad1)">A</div><div class="rot-name">강사 A</div><div class="rot-role">7/9 리드</div></div>
+        <div class="rot-person"><div class="rot-avatar" style="background:var(--grad4)">B</div><div class="rot-name">강사 B</div><div class="rot-role">7/23 리드</div></div>
+        <div class="rot-person"><div class="rot-avatar" style="background:var(--grad5)">C</div><div class="rot-name">강사 C</div><div class="rot-role">8/6 리드</div></div>
+        <div class="rot-person"><div class="rot-avatar" style="background:var(--grad2)">D</div><div class="rot-name">강사 D</div><div class="rot-role">8/20 리드</div></div>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="margin-top:2rem">
+      <h3 style="color:#4f46e5;font-size:1rem;margin-bottom:1.2rem">📋 격주 미팅 기본 아젠다 (60~90분)</h3>
+      <div class="agenda-list stagger">
+        <div class="agenda-row"><div class="agenda-time">10분</div><div class="agenda-info"><h4>지난 2주 진도 공유</h4><p>각자 5분 이내 — 작업 현황, 막힌 부분 공유</p></div></div>
+        <div class="agenda-row"><div class="agenda-time">20분</div><div class="agenda-info"><h4>리드 강사 발제</h4><p>핵심 이슈·결정 사항 (실습 난이도, 교재 포맷 등)</p></div></div>
+        <div class="agenda-row"><div class="agenda-time">20분</div><div class="agenda-info"><h4>교재 크로스 리뷰</h4><p>작성 부분 함께 검토, 중복 체크, 흐름 확인</p></div></div>
+        <div class="agenda-row"><div class="agenda-time">10분</div><div class="agenda-info"><h4>다음 2주 To-Do</h4><p>"어디까지 작성" 명확히 설정</p></div></div>
+        <div class="agenda-row"><div class="agenda-time">10분</div><div class="agenda-info"><h4>기타 논의</h4><p>자유 토론, 참고 자료 공유, 일정 조율</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PARTS ═══════════ -->
+<section class="section" id="parts">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">05 — PART ASSIGNMENT</div>
+      <div class="sec-title">파트 분배 — 자기 교재 = 자기 강의</div>
+      <div class="sec-desc">교재 개발 파트를 그대로 강의 → 콘텐츠 이해도·강의 품질 극대화</div>
+    </div>
+
+    <div class="part-grid stagger">
+      <div class="part-card">
+        <div class="part-header">
+          <div class="part-avatar" style="background:var(--grad1)">A</div>
+          <div><div class="part-name">강사 A — 환경 셋업 + Python·AI</div><div class="part-sub">1회차 & 5회차 강의 · 8H/차수</div></div>
+        </div>
+        <ul><li>VS Code 설치·설정, Copilot 사용법</li><li>ChatGPT/Claude 인터페이스</li><li>Python + AI API 데이터 파이프라인</li><li>AI 활용 주의사항 (할루시네이션 등)</li></ul>
+      </div>
+      <div class="part-card">
+        <div class="part-header">
+          <div class="part-avatar" style="background:var(--grad4)">B</div>
+          <div><div class="part-name">강사 B — 프롬프트 심화 + 문서 자동화</div><div class="part-sub">2회차 & 6회차 강의 · 8H/차수</div></div>
+        </div>
+        <ul><li>프롬프트 프레임워크 (STAR, CO-STAR, ROCARS)</li><li>Before↔After 실습 (기존 교재 활용)</li><li>보고서·PPT 자동 작성</li><li>템플릿 기반 문서 자동 생성</li></ul>
+      </div>
+      <div class="part-card">
+        <div class="part-header">
+          <div class="part-avatar" style="background:var(--grad5)">C</div>
+          <div><div class="part-name">강사 C — 체이닝 + 워크플로우 자동화</div><div class="part-sub">3회차 & 7회차 강의 · 8H/차수</div></div>
+        </div>
+        <ul><li>멀티턴 대화·프롬프트 체이닝</li><li>복잡 업무 단계별 분해</li><li>반복 업무 AI 자동화 설계</li><li>실무 시나리오 기반 실습</li></ul>
+      </div>
+      <div class="part-card">
+        <div class="part-header">
+          <div class="part-avatar" style="background:var(--grad2)">D</div>
+          <div><div class="part-name">강사 D — Excel·AI + 프로젝트</div><div class="part-sub">4회차 & 8회차 강의 · 8H/차수</div></div>
+        </div>
+        <ul><li>Excel + Copilot/ChatGPT 활용</li><li>피벗·차트·수식 자동화</li><li>미니 프로젝트 설계</li><li>실무 과제 발표 진행</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ GANTT ═══════════ -->
+<section class="section" id="gantt">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">06 — GANTT CHART</div>
+      <div class="sec-title">전체 추진 일정 한눈에</div>
+      <div class="sec-desc">6~7월 사전 기획 → 8월 과정개발 및 기획 → 9~12월 차수별 운영</div>
+    </div>
+
+    <div class="glass reveal" style="overflow-x:auto">
+      <table class="gantt">
+        <thead><tr><th></th><th>6월</th><th>7월 상</th><th>7월 하</th><th>8월 상</th><th>8월 하</th><th>9월</th><th>10~11월</th><th>11~12월</th></tr></thead>
+        <tbody>
+          <tr><td>사전기획</td><td><div class="bar purple">킥오프</div></td><td><div class="bar light-blue">확정</div></td><td><div class="bar light-blue">착수</div></td><td colspan="5"></td></tr>
+          <tr><td>과정개발</td><td colspan="3"></td><td><div class="bar blue">리뷰</div></td><td><div class="bar amber">완성</div></td><td colspan="3"><div class="bar dim">보완</div></td></tr>
+          <tr><td>교육운영</td><td colspan="5"></td><td><div class="bar green">1차</div></td><td><div class="bar green">2차</div></td><td><div class="bar green">3차</div></td></tr>
+          <tr><td>격주미팅</td><td style="font-size:.7rem;color:#4f46e5">6/25</td><td style="font-size:.7rem;color:#4f46e5">7/9</td><td style="font-size:.7rem;color:#4f46e5">7/23</td><td style="font-size:.7rem;color:#4f46e5">8/6</td><td style="font-size:.7rem;color:#4f46e5">8/20</td><td colspan="3" style="font-size:.7rem;color:#94a3b8">필요 시</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-box blue reveal" style="margin-top:2rem">
+      <h4>📊 Phase 2 차수별 운영 (9~12월)</h4>
+      <ul>
+        <li><strong>1차 (9월)</strong>: 파일럿 운영 → 피드백 수집 → 교재 보완</li>
+        <li><strong>2차 (10~11월)</strong>: 1차 피드백 반영본으로 운영</li>
+        <li><strong>3차 (11~12월)</strong>: 최종 운영, 수요에 따라 추가 차수 검토</li>
+        <li>※ 세부 일정은 담당자 별도 협의하여 진행</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DISCUSS ═══════════ -->
+<section class="section" id="discuss">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">07 — TODAY'S AGENDA</div>
+      <div class="sec-title">오늘 논의할 것</div>
+      <div class="sec-desc">아래 5가지를 오늘 방향이라도 잡겠습니다</div>
+    </div>
+
+    <div class="discuss-grid stagger">
+      <div class="discuss-row">
+        <div class="discuss-num" style="background:var(--grad1)">1</div>
+        <div class="discuss-body"><h4>커리큘럼 범위 — 어디까지 다룰 것인가?</h4><p>후보 주제 중 "필수 vs 선택" 확정. 8회 × 4H 구성이 적절한지? 빠지거나 추가할 주제?</p></div>
+      </div>
+      <div class="discuss-row">
+        <div class="discuss-num" style="background:var(--grad3)">2</div>
+        <div class="discuss-body"><h4>파트 분배 & 강의 담당</h4><p>각자 희망 파트 발표. "자기 교재 = 자기 강의" 원칙 동의? 2차 미팅(7/9)에서 확정.</p></div>
+      </div>
+      <div class="discuss-row">
+        <div class="discuss-num" style="background:var(--grad4)">3</div>
+        <div class="discuss-body"><h4>격주 운영 & 리드 로테이션 확인</h4><p>리드 로테이션 순서 확정, 미팅 요일·시간 고정 (격주 수요일 14:00?)</p></div>
+      </div>
+      <div class="discuss-row">
+        <div class="discuss-num" style="background:var(--grad5)">4</div>
+        <div class="discuss-body"><h4>Phase 2 교육 운영 방향</h4><p>차수 몇 회 운영? 차수별 대상 인원? 세부 일정은 담당자 별도 협의.</p></div>
+      </div>
+      <div class="discuss-row">
+        <div class="discuss-num" style="background:var(--grad2)">5</div>
+        <div class="discuss-body"><h4>교재 형태 & 작업 도구</h4><p>Markdown? Word? PPT? 공유 방식 (Drive / GitHub / 공유폴더)?</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ NEXT STEPS ═══════════ -->
+<section class="section" id="next">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content">
+    <div class="reveal">
+      <div class="sec-label">08 — NEXT STEPS</div>
+      <div class="sec-title">다음 스텝</div>
+      <div class="sec-desc">오늘 미팅 후 ~ 2차 미팅(7/9)까지 각자 할 일</div>
+    </div>
+
+    <div class="glass reveal">
+      <table class="next-table">
+        <tr><th style="color:#4f46e5">전원</th><td>맡은 파트의 <strong style="color:#1e293b">목차 초안</strong> 작성 (세부 항목 + 실습 예제 후보 포함) → 7/9 전 공유</td></tr>
+        <tr><th style="color:#2563eb">리드 (A)</th><td>2차 미팅 안건 준비, 교재 템플릿 초안 작성</td></tr>
+        <tr><th style="color:#4f46e5">전원</th><td>기존 교재에서 자기 파트에 활용할 부분 표시해오기</td></tr>
+        <tr><th style="color:#4f46e5">전원</th><td>교재 형태·작업 도구 의견 정리 (7/9에서 확정)</td></tr>
+      </table>
+    </div>
+
+    <div class="callout-box purple reveal">
+      <h4>📌 부문장님 보고 포인트</h4>
+      <ul>
+        <li>교육운영파트 자체 과정 개설 — <strong style="color:#1e293b">중급 수준(실무적용 중심)</strong></li>
+        <li>담당자(강사) 역할: <strong style="color:#1e293b">교육과정 기획 · 교재 개발 · 교육계획 수립 · 교육안내 · 강의 진행</strong></li>
+        <li>추진 일정: <strong style="color:#1e293b">8월 과정개발 및 기획</strong> (사전 기획 6~7월, 격주 미팅 5회)</li>
+        <li>추진 일정: <strong style="color:#1e293b">9~12월 차수별 운영</strong> (3차수 예정, 총 96H 강의)</li>
+        <li>세부 일정은 담당자 별도 협의하여 진행</li>
+        <li>기존 초급 교재의 검증된 콘텐츠(프레임워크·실습 구조) <strong style="color:#1e293b">재활용</strong></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ END ═══════════ -->
+<section class="section" id="end" style="min-height:60vh">
+  <div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+  <div class="grid-bg"></div>
+  <div class="content" style="text-align:center">
+    <div class="reveal">
+      <h2><span class="gradient">감사합니다</span></h2>
+      <p>AI 활용 역량 강화 — 중급 과정 개발 프로젝트<br>첫 미팅 · 2026. 06. 25</p>
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── Particle Canvas ───
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+window.addEventListener('resize',resizeCanvas);resizeCanvas();
+class Particle{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+0.5;this.speedX=(Math.random()-0.5)*0.3;this.speedY=(Math.random()-0.5)*0.3;this.opacity=Math.random()*0.15+0.05}
+  update(){this.x+=this.speedX;this.y+=this.speedY;if(this.x<0||this.x>canvas.width)this.speedX*=-1;if(this.y<0||this.y>canvas.height)this.speedY*=-1}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`rgba(99,102,241,${this.opacity})`;ctx.fill()}
+}
+for(let i=0;i<60;i++)particles.push(new Particle());
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw()});
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<150){
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(99,102,241,${0.025*(1-dist/150)})`;ctx.lineWidth=0.5;ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ─── Scroll Reveal ───
+const revealEls=document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale,.stagger');
+const revealObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');
+    e.target.querySelectorAll('.counter').forEach(c=>{
+      const target=+c.dataset.target;if(c.dataset.counted)return;c.dataset.counted='1';
+      let current=0;const step=target/40;
+      const timer=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(timer)}c.textContent=Math.round(current)},30);
+    });
+    e.target.querySelectorAll('.stat-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.width},200)});
+  }});
+},{threshold:0.15});
+revealEls.forEach(el=>revealObserver.observe(el));
+
+// ─── Nav Progress & Active Link ───
+const sections=document.querySelectorAll('.section');
+const navLinks=document.querySelectorAll('.nav-links a');
+const navProgress=document.getElementById('navProgress');
+window.addEventListener('scroll',()=>{
+  const scrolled=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  navProgress.style.width=scrolled+'%';
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)current=s.id});
+  navLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active')});
+});
+
+// ─── Smooth scroll for nav links ───
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    e.preventDefault();
+    const target=document.querySelector(link.getAttribute('href'));
+    if(target)target.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>
